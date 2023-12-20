@@ -16,13 +16,7 @@ pipeline {
 				sh 'mvn clean install'
             }
         }
-		stage('Sonarqube') {
-            steps {
-                echo 'sonar qube analysis for webapp application '
-				waitForQualityGate false
-            }
-		
-		
+	
 		stage('Deploy') {
             steps {
                 echo 'Deploy to tomcat ap/n server '
