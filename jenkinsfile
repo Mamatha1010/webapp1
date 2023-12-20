@@ -8,14 +8,21 @@ pipeline {
 				git branch: 'main', url: 'https://github.com/Mamatha1010/webapp1.git'
             }
         }
-		
-				
-		stage('Build Artifact') {
+		stage("build & SonarQube analysis") {
+            agent any
             steps {
-                echo 'Build Artifact with maven build tool'
-				sh 'mvn clean install'
+              withSonarQubeEnv('My SonarQube Server') {
+                sh 'mvn clean package sonar:sonar'
+              }
             }
-        }
+          }
+          stage("Quality Gate") {
+            steps {
+              timeout(time: 1, unit: 'HOURS') {
+                waitForQualityGate abortPipeline: true
+              }
+            }
+          }
 	
 		stage('Deploy') {
             steps {
