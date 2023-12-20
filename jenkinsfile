@@ -16,6 +16,11 @@ pipeline {
 				sh 'mvn clean install'
             }
         }
+		stage('Sonarqube') {
+            steps {
+                echo 'sonar qube analysis for webapp application '
+				waitForQualityGate false
+            }
 		
 		
 		stage('Deploy') {
@@ -23,6 +28,7 @@ pipeline {
                 echo 'Deploy to tomcat ap/n server '
 				deploy adapters: [tomcat9(credentialsId: 'tomcat-credentials', path: '', url: 'http://3.88.103.180:8081/')], contextPath: 'facebook', war: '**/*.war'
             }
+	
         }
     }
 }
